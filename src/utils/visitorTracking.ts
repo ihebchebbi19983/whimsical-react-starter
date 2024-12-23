@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from "@/components/ui/use-toast";
 
 const API_URL = 'https://respizenmedical.com/fiori/track_visitor.php';
 const MAX_RETRIES = 3;
@@ -20,8 +21,11 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
     // Get current date in YYYY-MM-DD format
     const currentDate = new Date().toISOString().split('T')[0];
     
+    // Generate a unique identifier for the visit using timestamp
+    const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
     const visitorData: VisitorData = {
-      page_visitors: pageName,
+      page_visitors: `${pageName}-${uniqueId}`, // Make each page visit unique
       city_visitors: 'Unknown', // Let the server handle this
       country_visitors: 'Unknown', // Let the server handle this
       date_visitors: currentDate
@@ -55,6 +59,11 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
 
     // Only show error toast in production
     if (process.env.NODE_ENV === 'production') {
+      toast({
+        title: "Error tracking visit",
+        description: "Unable to track your visit at this time.",
+        variant: "destructive",
+      });
       console.error('Failed to track visitor after maximum retries');
     }
   }
