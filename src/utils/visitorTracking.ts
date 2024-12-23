@@ -21,13 +21,15 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
     // Get current date in YYYY-MM-DD format
     const currentDate = new Date().toISOString().split('T')[0];
     
-    // Generate a unique identifier for the visit using timestamp
-    const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    // Generate a unique identifier for the visit
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 15);
+    const uniquePageId = `${pageName}_${timestamp}_${randomId}`;
     
     const visitorData: VisitorData = {
-      page_visitors: `${pageName}-${uniqueId}`, // Make each page visit unique
-      city_visitors: 'Unknown', // Let the server handle this
-      country_visitors: 'Unknown', // Let the server handle this
+      page_visitors: uniquePageId,
+      city_visitors: 'Unknown', // Server will handle this
+      country_visitors: 'Unknown', // Server will handle this
       date_visitors: currentDate
     };
 
@@ -64,7 +66,7 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
         description: "Unable to track your visit at this time.",
         variant: "destructive",
       });
-      console.error('Failed to track visitor after maximum retries');
     }
+    console.error('Failed to track visitor after maximum retries');
   }
 };
