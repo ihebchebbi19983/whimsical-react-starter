@@ -62,7 +62,7 @@ const BrandLocation = () => {
                   />
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-white bg-[#591C1C]/90">
                     <p className="text-lg font-['WomanFontBold']">
-                      Rue du Lac Tibériade ,<br />
+                      Rue du Lac Tibériade , <br />
                       Les Berges du lac, La Marsa, Tunisia
                     </p>
                   </div>

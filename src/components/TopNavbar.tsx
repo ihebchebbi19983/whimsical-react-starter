@@ -62,6 +62,7 @@ const TopNavbar = () => {
               <Phone size={18} />
               CONTACTEZ-NOUS
             </button>
+            
             <CartIcon />
           </div>
         </div>
