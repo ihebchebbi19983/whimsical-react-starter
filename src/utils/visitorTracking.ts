@@ -11,7 +11,6 @@ interface VisitorData {
   page_visitors: string;
   city_visitors: string;
   country_visitors: string;
-  ip_visitors: string;
   date_visitors: string;
 }
 
@@ -19,12 +18,19 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
   try {
     console.log('Starting visitor tracking for page:', pageName);
     
+    // Get current date in YYYY-MM-DD format
+    const currentDate = new Date().toISOString().split('T')[0];
+    
+    // Generate a unique identifier for the visit
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 15);
+    const uniquePageId = `${pageName}_${timestamp}_${randomId}`;
+    
     const visitorData: VisitorData = {
-      page_visitors: pageName,
+      page_visitors: uniquePageId,
       city_visitors: 'Unknown', // Server will handle this
       country_visitors: 'Unknown', // Server will handle this
-      ip_visitors: 'Server-Side', // Server will detect the real IP
-      date_visitors: new Date().toISOString().split('T')[0]
+      date_visitors: currentDate
     };
 
     console.log('Sending visitor data:', visitorData);
@@ -54,6 +60,13 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
     }
 
     // Only show error toast in production
-   
+    if (process.env.NODE_ENV === 'production') {
+      toast({
+        title: "Error tracking visit",
+        description: "Unable to track your visit at this time.",
+        variant: "destructive",
+      });
+    }
+    console.error('Failed to track visitor after maximum retries');
   }
 };
