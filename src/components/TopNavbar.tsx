@@ -55,7 +55,6 @@ const TopNavbar = () => {
           </div>
 
           <div className="hidden sm:flex items-center gap-4">
-            <CartIcon />
             <button
               onClick={() => setIsContactModalOpen(true)}
               className="flex items-center gap-2 text-sm text-white whitespace-nowrap hover:text-accent transition-colors duration-300"
@@ -63,6 +62,7 @@ const TopNavbar = () => {
               <Phone size={18} />
               CONTACTEZ-NOUS
             </button>
+            <CartIcon />
           </div>
         </div>
       </nav>
