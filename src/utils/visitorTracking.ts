@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { toast } from "@/components/ui/use-toast";
 
 const API_URL = 'https://respizenmedical.com/fiori/track_visitor.php';
 const MAX_RETRIES = 3;
@@ -11,7 +10,6 @@ interface VisitorData {
   page_visitors: string;
   city_visitors: string;
   country_visitors: string;
-  ip_visitors: string;
   date_visitors: string;
 }
 
@@ -19,12 +17,14 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
   try {
     console.log('Starting visitor tracking for page:', pageName);
     
+    // Get current date in YYYY-MM-DD format
+    const currentDate = new Date().toISOString().split('T')[0];
+    
     const visitorData: VisitorData = {
       page_visitors: pageName,
-      city_visitors: 'Unknown', // Server will handle this
-      country_visitors: 'Unknown', // Server will handle this
-      ip_visitors: 'Server-Side', // Server will detect the real IP
-      date_visitors: new Date().toISOString().split('T')[0]
+      city_visitors: 'Unknown', // Let the server handle this
+      country_visitors: 'Unknown', // Let the server handle this
+      date_visitors: currentDate
     };
 
     console.log('Sending visitor data:', visitorData);
@@ -54,6 +54,8 @@ export const trackVisitor = async (pageName: string, retryCount = 0): Promise<vo
     }
 
     // Only show error toast in production
-   
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Failed to track visitor after maximum retries');
+    }
   }
 };
